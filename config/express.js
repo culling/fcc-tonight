@@ -2,6 +2,7 @@
 var config      = require("./config");
 var passport    = require("./passport");
 var mongo       = require("./mongo");
+var secrets     = require("./secrets");
 
 //Modules
 var http        = require('http');
@@ -15,7 +16,8 @@ var flash       = require("connect-flash");
 //express app
 var app         = express();
 
-
+console.log("Secrets");
+console.log(secrets.googleAPIKey);
 
 module.exports = function(){
 //    var server  = http.createServer(app);
