@@ -16,9 +16,6 @@ var flash       = require("connect-flash");
 //express app
 var app         = express();
 
-console.log("Secrets");
-console.log(secrets.googleAPIKey);
-
 module.exports = function(){
 //    var server  = http.createServer(app);
 
