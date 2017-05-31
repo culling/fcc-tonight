@@ -12,6 +12,40 @@ var cookieParser    = require('cookie-parser');
 var expressSession  = require('express-session');
 var flash       = require("connect-flash");
 
+/*
+var googleMapsClient = require('@google/maps').createClient({
+  key: secrets.googleAPIKey
+});
+
+
+function getLatLon(placeName, callback){ googleMapsClient.geocode({
+    address:placeName
+}, function(err, response){
+    if(err){console.error(err)};
+    let results = response.json.results[0];
+    let latLon  = results.geometry.location;
+    //console.log(JSON.stringify( results.geometry.location, null , "\t" ))
+    callback(latLon);
+});
+}
+
+
+function getPlacesNearAddress(placeName, callback){
+   getLatLon("Perth", function(latLng){
+        console.log(latLng);
+        googleMapsClient.placesNearby({
+        location:[latLng.lat, latLng.lng],
+        radius:500,
+        type:"restaurant"
+        }, function (err, response){
+            if(err){console.error(err)};
+            console.log(JSON.stringify(response, null , "\t" ) );
+        })
+
+    }); 
+}
+getPlacesNearAddress("Perth");
+*/
 
 //express app
 var app         = express();

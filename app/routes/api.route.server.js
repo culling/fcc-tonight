@@ -13,7 +13,7 @@ var mongoExport = require("./../../config/mongo");
 var passport    = require("passport");
 var users       = require("./../controllers/user.controller.server");
 //var polls       = require("./../controllers/polls.controller.server");
-
+var places      = require("./../controllers/places.controller.server");
 
 
 
@@ -23,7 +23,13 @@ router.get("/", function(req, res){
 });
 
 
-
+router.get("/places/:id", function(req, res){
+    places.getPlacesNearAddress(req.params.id, "bar", function(placesResult){
+        var places = placesResult.json.results;
+        res.write(JSON.stringify(places, null, "\t"));
+        res.end();        
+    });
+});
 
 
 

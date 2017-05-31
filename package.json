@@ -16,7 +16,8 @@
   },
   "author": "Gene Culling",
   "license": "ISC",
-    "dependencies": {
+  "dependencies": {
+    "@google/maps": "^0.3.1",
     "body-parser": "^1.17.1",
     "bower": "^1.8.0",
     "connect-ensure-login": "^0.1.1",
@@ -30,5 +31,4 @@
     "passport-local": "^1.0.0",
     "socket.io": "^2.0.1"
   }
-
 }
