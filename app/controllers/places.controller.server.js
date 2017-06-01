@@ -17,8 +17,8 @@ function getLatLon(placeName, callback){ googleMapsClient.geocode({
 
 
 exports.getPlacesNearAddress = function getPlacesNearAddress(placeName, placeType, callback){
-   getLatLon("Perth", function(latLng){
-        console.log(latLng);
+   getLatLon(placeName, function(latLng){
+        //console.log(latLng);
         googleMapsClient.placesNearby({
         location:[latLng.lat, latLng.lng],
         radius:500,
