@@ -126,7 +126,7 @@ class PlacesContainerComponent extends React.Component{
 
 
 }
-
+/*
 ReactDOM.render(
     <PlacesContainerComponent />, document.getElementById("mount-point")
 )
@@ -134,3 +134,4 @@ ReactDOM.render(
 ReactDOM.render (
     <TestComponent />, document.getElementById('test-point')
 )
+*/

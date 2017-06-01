@@ -6,18 +6,21 @@ console.log("Card Loaded");
 
 
 class Card extends React.Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        //var [placeId] = this.props.place.place_id;
         this.state={
             count: 0,
-            detailsState: "details-div-hidden"
+            detailsState: "details-div-hidden",
+            [`${this.props.place.place_id}`]:0
 
         }
+        console.log(this.state);
     }
 
     componentWillMount(){
-        console.log("Card Mounted");
-        console.log(this.props.place);
+        //console.log("Card Mounted");
+        //console.log(this.props.place);
 
 
         socket.on('new state', function(newState) {
@@ -49,19 +52,23 @@ class Card extends React.Component{
 
 
   _countClicker(e) {
-    this.networkSetState({ count: (this.state.count + 1) });
-    console.log(this.state.count);
+      let placeId = this.props.place.place_id;
+    this.networkSetState({ [`${this.props.place.place_id}`]: (this.state[`${this.props.place.place_id}`]+ 1 ) });
+    this.networkSetState({ count:   (this.state.count  + 1) });
+    //console.log(this.state.count);
+    console.log(this.state);
   }
   
 
     render(){
         return(
-        
-            <div className="col s12 m6">
+
+            <div className="col s12 m6" >
                 <div className="card blue-grey darken-1">
                     <div className="card-content white-text">
                         <span className="card-title">{this.props.place.name}</span>
-                        Clicks: {this.state.count}
+                        <div>Clicks: {this.state.count}</div>
+                        <div>Clicks for this Place: {this.state[`${this.props.place.place_id}`] }</div>
                         <div className="card-action">
                             <a href="#" onClick={()=> this._countClicker() }>Count Clicker</a>
                             <a href="#">This is a link</a>
@@ -69,7 +76,7 @@ class Card extends React.Component{
                     </div>
                 </div>
             </div>
-        
+
 
 
         )

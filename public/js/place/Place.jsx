@@ -39,21 +39,18 @@ class PlaceContainer extends React.Component{
 
     render(){
         return (
-            <div className="place-container">
+            <div className="place-container row">
 
+                    {
+                        this.state.places.map( (place, i) => 
+                        <Card key={i} place={place} />
+                    ) }
                 
-                {/*(this.state.places.length == 0) &&*/}
+                {(this.state.places.length == 0) &&
                     <div>
                         No Places Found!
-                        <Card place={{"name": "Test"}} />
                     </div>
-
-                {
-                    this.state.places.map( (place, i) => 
-                    <div>
-                        <Card key={i} place={place} />
-                    </div>
-                ) }
+                }
                 
 
             </div>
