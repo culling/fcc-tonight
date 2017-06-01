@@ -12,8 +12,8 @@ class Card extends React.Component{
         this.state={
             count: 0,
             detailsState: "details-div-hidden",
-            [`${this.props.place.place_id}`]:0
-
+            [`${this.props.place.place_id}`]:0,
+            place: this.props.place
         }
         console.log(this.state);
     }
@@ -44,7 +44,9 @@ class Card extends React.Component{
     }
 
     saveStateToDB() {
-        jQuery.ajax({ url: '/api/message', type: 'PUT', data: this.state });
+        var place = Object.assign(this.state.place);
+        place.going = this.state[`${this.props.place.place_id}`];
+        jQuery.ajax({ url: '/api/going/new', type: 'POST', data: this.state.place });
     }
     //End NETWORK Sync
 
@@ -54,7 +56,7 @@ class Card extends React.Component{
   _countClicker(e) {
       let placeId = this.props.place.place_id;
     this.networkSetState({ [`${this.props.place.place_id}`]: (this.state[`${this.props.place.place_id}`]+ 1 ) });
-    this.networkSetState({ count:   (this.state.count  + 1) });
+    //this.networkSetState({ count:   (this.state.count  + 1) });
     //console.log(this.state.count);
     console.log(this.state);
   }

@@ -16,6 +16,16 @@ var users       = require("./../controllers/user.controller.server");
 var places      = require("./../controllers/places.controller.server");
 
 
+//Happy Helpful functions
+function listAllProperties(o) {
+    var objectToInspect;     
+    var result = [];
+    for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
+    result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
+    }
+    return result; 
+}
+
 
 
 router.get("/", function(req, res){
@@ -33,6 +43,19 @@ router.get("/places/:id", function(req, res){
 
 
 
+router.post("/going/new", function(req, res){
+    console.log(req.body);
+    //var props = listAllProperties(req.body);
+    //console.log(props);
+    //var place = JSON.parse(props[0]);
+
+    //console.log(place);
+    var place = req.body;
+    mongoExport.places.create(places, function(res){
+        //console.log(res);
+    });
+
+});
 
 
 //Messages
@@ -50,146 +73,146 @@ router.put("/message", function(req, res){
 });
 
 /*
-//Meetings
-router.get("/meetings", function(req, res){
-    mongoExport.polls.retrieveMeetings(null, function(foundDocs){
-        res.send(foundDocs);
-    })
-});
-
-
-// Polls
-
-router.get("/polls", function(req, res){
-    //var username = req.user.username ;
-
-    mongoExport.polls.retrieve(null, function(foundDocs){
-
-        res.send(foundDocs);
-    })
-});
-
-
-
-router.get("/polls/user", function(req, res){
-    //var username = req.user.username ;
-    mongoExport.polls.retrieve(null, function(foundDocs){
-
-        if(req.user){
-            var foundDocs = foundDocs.filter((foundDoc) => {
-                //console.log(foundDoc);
-                return foundDoc.createdByUser == req.user.username;
-            });
-            //console.log(filtered);
-        }
-
-        res.send(foundDocs);
-    })
-});
-
-router.post("/polls/new", function(req, res){
-    function listAllProperties(o) {
-        var objectToInspect;     
-        var result = [];
-        
-        for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
-        result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
-        }
-	
-	    return result; 
-    }
-
-    var props =  listAllProperties(req.body);
-    //console.log(props);
-    
-    var poll = JSON.parse(props[0] );
-
-    console.log(req.user);
-    poll.createdByUser = req.user.username;
-    //console.log(req.body);
-    mongoExport.polls.create(poll, function(res){
-        
-    } );
-});
-
-router.post("/polls/update", function(req, res){
-    function listAllProperties(o) {
-        var objectToInspect;     
-        var result = [];
-        
-        for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
-        result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
-        }
-	
-	    return result; 
-    }
-
-    var props =  listAllProperties(req.body);
-    var poll = JSON.parse(props[0] ).poll;
-    //console.log(poll);
-    mongoExport.polls.update(poll, function(res){
-        console.log(res);
-    });
-});
-
-
-//DELETE
-router.delete("/polls/delete/:id", function(req, res){
-    function listAllProperties(o) {
-        var objectToInspect;     
-        var result = [];
-        
-        for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
-        result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
-        }
-	
-	    return result; 
-    }
-
-
-    var props =  listAllProperties(req.body);
-    var poll = JSON.parse(props[0] ).poll;
-
-    console.log(poll);
-
-    mongoExport.polls.delete(poll, function(res){
-        console.log(res);
+    //Meetings
+    router.get("/meetings", function(req, res){
+        mongoExport.polls.retrieveMeetings(null, function(foundDocs){
+            res.send(foundDocs);
+        })
     });
 
-});
+
+    // Polls
+
+    router.get("/polls", function(req, res){
+        //var username = req.user.username ;
+
+        mongoExport.polls.retrieve(null, function(foundDocs){
+
+            res.send(foundDocs);
+        })
+    });
 
 
-router.get("/polls/:id", function(req, res){
 
-    console.log(req.params.id);
+    router.get("/polls/user", function(req, res){
+        //var username = req.user.username ;
+        mongoExport.polls.retrieve(null, function(foundDocs){
 
-    mongoExport.polls.retrieve(null, function(foundDocs){
+            if(req.user){
+                var foundDocs = foundDocs.filter((foundDoc) => {
+                    //console.log(foundDoc);
+                    return foundDoc.createdByUser == req.user.username;
+                });
+                //console.log(filtered);
+            }
+
+            res.send(foundDocs);
+        })
+    });
+
+    router.post("/polls/new", function(req, res){
+        function listAllProperties(o) {
+            var objectToInspect;     
+            var result = [];
+            
+            for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
+            result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
+            }
         
-        if(req.params.id){
-            var foundDocs = foundDocs.filter((foundDoc) => {
-                //console.log(foundDoc);
-                return foundDoc.id == req.params.id ;
-            });
-            //console.log(filtered);
+            return result; 
         }
 
-        res.send(foundDocs);
+        var props =  listAllProperties(req.body);
+        //console.log(props);
+        
+        var poll = JSON.parse(props[0] );
+
+        console.log(req.user);
+        poll.createdByUser = req.user.username;
+        //console.log(req.body);
+        mongoExport.polls.create(poll, function(res){
+            
+        } );
+    });
+
+    router.post("/polls/update", function(req, res){
+        function listAllProperties(o) {
+            var objectToInspect;     
+            var result = [];
+            
+            for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
+            result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
+            }
+        
+            return result; 
+        }
+
+        var props =  listAllProperties(req.body);
+        var poll = JSON.parse(props[0] ).poll;
+        //console.log(poll);
+        mongoExport.polls.update(poll, function(res){
+            console.log(res);
+        });
+    });
+
+
+    //DELETE
+    router.delete("/polls/delete/:id", function(req, res){
+        function listAllProperties(o) {
+            var objectToInspect;     
+            var result = [];
+            
+            for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)) {  
+            result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
+            }
+        
+            return result; 
+        }
+
+
+        var props =  listAllProperties(req.body);
+        var poll = JSON.parse(props[0] ).poll;
+
+        console.log(poll);
+
+        mongoExport.polls.delete(poll, function(res){
+            console.log(res);
+        });
+
+    });
+
+
+    router.get("/polls/:id", function(req, res){
+
+        console.log(req.params.id);
+
+        mongoExport.polls.retrieve(null, function(foundDocs){
+            
+            if(req.params.id){
+                var foundDocs = foundDocs.filter((foundDoc) => {
+                    //console.log(foundDoc);
+                    return foundDoc.id == req.params.id ;
+                });
+                //console.log(filtered);
+            }
+
+            res.send(foundDocs);
+        })
+    });
+
+
+
+
+    //User
+    router.get("/user", function(req, res){
+        var user = req.user;
+        if(! user){
+            user = {
+                username: req.ip
+            }
+        }
+        res.send(user);
     })
-});
-
-
-
-
-//User
-router.get("/user", function(req, res){
-    var user = req.user;
-    if(! user){
-        user = {
-            username: req.ip
-        }
-    }
-    res.send(user);
-})
 
 
 
