@@ -26,9 +26,9 @@ class GuestList {
 
 
 var getByPlaceId = function (place_id, res){
-    console.log("Get by PlaceId called");
+    //console.log("Get by PlaceId called");
     var query = {place_id : place_id };
-    console.log(place_id)
+    //console.log(place_id)
     var db = mongo.connect(mongoUrl);
     mongo.connect(mongoUrl, function(err, db){
         if(err){console.error(err)};
@@ -44,7 +44,7 @@ var getByPlaceId = function (place_id, res){
                 db.close();
                 return res(null, result);
             }else{
-                console.log("didnt find place_id")
+                //console.log("didnt find place_id")
                 db.close();
                 return res(null, null );
             }
@@ -58,6 +58,7 @@ exports.getByPlaceId = getByPlaceId;
 
 exports.set = function set(guestList, res){
     console.log(guestList);
+
     if(guestList.place_id != true ){
         res( new Error("place_id not included"));
     }
@@ -66,34 +67,32 @@ exports.set = function set(guestList, res){
             //res( new Error("place already exists"));
             console.log("place already exists");
         }
+    })
         //}else{
             var db = mongo.connect(mongoUrl);
             mongo.connect(mongoUrl, function(err, db){
                 if(err){console.error(err)};
                 var collection = db.collection( collectionName );
-                collection.findOneAndUpdate({"place_id": guestList.place_id}, 
-                {guestList},
-                {upsert: true}, function(err, updatedDoc){
-                    if(err){console.error(err)}
+                collection.update({"guestList.place_id": guestList.place_id}, 
+                {$set:{"guestList": guestList} },
+                {upsert: true}
+                , function(err, updatedDoc){
+                    //if(err){console.error(err)}
                     if(updatedDoc){
-                        console.log(updatedDoc)
+                        //console.log(updatedDoc.result)
+                        db.close();
                     }else{
                         "no updatedDoc"
-                    }
-                    /*if(err){console.error(err)}
-                    collection.findOne({place_id: guestList.place_id},
-                    {},
-                    function(err, guestList){
-                        if(err){console.error(err)};
-                        res(null, guestList);
                         db.close();
-                        */
+                    }
+
                     //}
                     //);
-                });
+                }
+            );
             });
-        }
-    )
+        //}
+    //)
 /*
 */
 }

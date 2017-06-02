@@ -44,11 +44,11 @@ router.get("/places/:id", function(req, res){
 
 
 router.put("/guestList", function(req, res){
+    //console.log(req.body);
     var guestList = {
         place_id:   req.body.place_id,
         guests:     req.body.guests
     };
-
 
     mongoExport.guestList.set(guestList, function(res){
         //console.log(res);
@@ -57,20 +57,12 @@ router.put("/guestList", function(req, res){
 });
 
 router.get("/guestList/:id", function(req, res){
-    console.log(req.params.id );
-    //var props = listAllProperties(req.body);
-    //console.log(props);
-    //var place = JSON.parse(props[0]);
-
-    //console.log(place);
-
-
-
+    //console.log(req.params.id );
     mongoExport.guestList.getByPlaceId(req.params.id, function(err, results){
         if(err){
             res.write(err);
         }
-        console.log(results);
+        //console.log(results);
         res.write(JSON.stringify(results));
         res.end();
         //res.send(results[1]);

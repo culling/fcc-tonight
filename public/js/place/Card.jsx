@@ -13,8 +13,8 @@ class Card extends React.Component{
             count: 0,
             detailsState: "details-div-hidden",
             [`${this.props.place.place_id}`]:0,
-            place: this.props.place,
-            guests: []
+            place: this.props.place, 
+            guests:[]
         }
         //console.log(this.state);
     }
@@ -22,7 +22,29 @@ class Card extends React.Component{
     componentWillMount(){
         //console.log("Card Mounted");
         //console.log(this.props.place);
-
+        //function getGuestList(place_id){
+            jQuery.ajax({
+                method: 'GET',
+                url:("/api/guestList/"+ this.props.place.place_id),
+                contentType: 'application/json', // for request
+                //dataType: 'json',
+                success: (results)=>{
+                    //if(results[0].length != undefined){
+                    let guestList = JSON.parse(results) ;
+                    if (guestList != null){
+                        /*
+                        console.log("results: " + results);
+                        console.log("guestList: ")
+                        console.log(guestList.guestList);
+                        console.log("guests: ")
+                        console.log(guestList.guestList.guests);
+                        */
+                        this.setState({guests: (guestList.guestList.guests || [] )});
+                        
+                    }
+                }
+            });
+        //}
 
 
 
@@ -47,44 +69,20 @@ class Card extends React.Component{
     }
 
     saveStateToDB() {
-/*
-var data = {
-    "name": "James Jamesy",
-    "children": [
-        {
-            "name": "Tiny James",
-            "age": "4"
-        },
-        {
-            "name": "Little James",
-            "age": "6"
-        },
-        {
-            "name": "Graham",
-            "age": "8"
-        }
-    ]
-}
-
-var request = $.ajax({
-    method: 'PUT',
-    url: '/api/guestList',
-    data: JSON.stringify(data),
-    contentType: 'application/json', // for request
-    dataType: 'json' // for response
-});
-*/
-
+        
         var place = Object.assign(this.state.place);
-        place.guests = [];
+        place.guests = this.state.guests.map((guest) => {return guest});
         place.guests.push(this.props.user.username); //this.state[`${this.props.place.place_id}`];
         console.log(place);
-        //jQuery.ajax({ url: '/api/guestList', type: 'POST', data: JSON.stringify(place,null, "\t") });
+        
+        //console.log(this.state.guests);
+
         jQuery.ajax({ url: '/api/guestList', 
             contentType: 'application/json', // for request
             dataType: 'json', //for response
             type: 'PUT',
-            data: JSON.stringify(place) });
+            data: JSON.stringify(place) 
+        });
 
     }
 
@@ -96,8 +94,14 @@ var request = $.ajax({
 
 
   _countClicker(e) {
-      let placeId = this.props.place.place_id;
-    this.networkSetState({ [`${this.props.place.place_id}`]: (this.state[`${this.props.place.place_id}`]+ 1 ) });
+    //let placeId = this.props.place.place_id;
+    //this.networkSetState({ [`${this.props.place.place_id}`]: (this.state[`${this.props.place.place_id}`]+ 1 ) });
+
+    //var place = Object.assign(this.state.place);
+        var guests = this.state.guests.map((guest) => {return guest});
+        guests.push(this.props.user.username); //this.state[`${this.props.place.place_id}`];
+        console.log(guests);
+    this.networkSetState({guests:guests});
     //this.networkSetState({ count:   (this.state.count  + 1) });
     //console.log(this.state.count);
     //console.log(this.state);
@@ -112,7 +116,10 @@ var request = $.ajax({
                     <div className="card-content white-text">
                         <span className="card-title">{this.props.place.name}</span>
                         <div>Clicks: {this.state.count}</div>
-                        <div>Clicks for this Place: {this.state[`${this.props.place.place_id}`] }</div>
+                        {/*<div>Clicks for this Place: {this.state[`${this.props.place.place_id}`] }</div>*/}
+                        { this.state.guests &&
+                            <div>Guests for this Place: {this.state.guests.length}</div>
+                        }
                         <div className="card-action">
                             <a href="#" onClick={()=> this._countClicker() }>Count Clicker</a>
                             <a href="#">This is a link</a>

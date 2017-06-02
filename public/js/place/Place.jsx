@@ -35,7 +35,10 @@ class PlaceContainer extends React.Component{
 
             }
         });
-        
+
+
+
+
         //User
         jQuery.ajax({
             method: 'GET',
