@@ -118,7 +118,17 @@ class Card extends React.Component{
                         <div>Clicks: {this.state.count}</div>
                         {/*<div>Clicks for this Place: {this.state[`${this.props.place.place_id}`] }</div>*/}
                         { this.state.guests &&
-                            <div>Guests for this Place: {this.state.guests.length}</div>
+                            <div>Guests for this Place: {this.state.guests.length}
+                                <p> Current Guest List</p>
+                                
+                                <ul className="collection">
+                                    {this.state.guests.map((guest, i) => {
+                                        return <li key={i} className="collection-item avatar" style={{color: "black"}}>
+                                            <i className="material-icons circle red" style={{ fontSize:"2em" }} >{(guest[0]).toUpperCase() }</i><p>{guest}</p>
+                                            </li>})}
+                                </ul>
+                            </div>
+                            
                         }
                         <div className="card-action">
                             <a href="#" onClick={()=> this._countClicker() }>Count Clicker</a>
