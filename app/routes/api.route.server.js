@@ -43,19 +43,41 @@ router.get("/places/:id", function(req, res){
 
 
 
-router.post("/going/new", function(req, res){
-    console.log(req.body);
+router.put("/guestList", function(req, res){
+    var guestList = {
+        place_id:   req.body.place_id,
+        guests:     req.body.guests
+    };
+
+
+    mongoExport.guestList.set(guestList, function(res){
+        //console.log(res);
+    });
+
+});
+
+router.get("/guestList/:id", function(req, res){
+    console.log(req.params.id );
     //var props = listAllProperties(req.body);
     //console.log(props);
     //var place = JSON.parse(props[0]);
 
     //console.log(place);
-    var place = req.body;
-    mongoExport.places.create(places, function(res){
-        //console.log(res);
+
+
+
+    mongoExport.guestList.getByPlaceId(req.params.id, function(err, results){
+        if(err){
+            res.write(err);
+        }
+        console.log(results);
+        res.write(JSON.stringify(results));
+        res.end();
+        //res.send(results[1]);
     });
 
 });
+
 
 
 //Messages
@@ -202,7 +224,7 @@ router.put("/message", function(req, res){
 
 
 
-
+*/
     //User
     router.get("/user", function(req, res){
         var user = req.user;
@@ -216,6 +238,6 @@ router.put("/message", function(req, res){
 
 
 
-*/
+
 
 module.exports = router;

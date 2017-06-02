@@ -64,7 +64,7 @@ module.exports = function(){
         socket.on('new state', function (data) {
             console.log('server - statusChange');
             //socket.broadcast.emit('new state');
-            console.log(data);
+            //console.log(data);
             socket.broadcast.emit("new state", data);
         });
 
@@ -78,6 +78,7 @@ module.exports = function(){
 
 
     var bodyParser = require("body-parser");
+    app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(cookieParser());
     app.use(expressSession({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));

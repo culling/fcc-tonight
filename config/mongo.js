@@ -3,4 +3,5 @@
 
 exports.users   = require('./../app/models/user.model.server');
 //exports.polls    = require('./../app/models/poll.model.server');
-exports.places  = require("./../app/models/place.model.server")
+exports.places  = require("./../app/models/place.model.server");
+exports.guestList = require("./../app/models/guestList.model.server");

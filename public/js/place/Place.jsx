@@ -15,6 +15,8 @@ class PlaceContainer extends React.Component{
     }
 
     componentWillMount(){
+
+        //Place
         var placeName = "Perth"
         jQuery.ajax({
             method: 'GET',
@@ -33,7 +35,16 @@ class PlaceContainer extends React.Component{
 
             }
         });
-               
+        
+        //User
+        jQuery.ajax({
+            method: 'GET',
+            url:"/api/user",
+            success: (user)=>{
+                this.setState({ user: user })
+            }
+        });
+
     }
     
 
@@ -43,7 +54,7 @@ class PlaceContainer extends React.Component{
 
                     {
                         this.state.places.map( (place, i) => 
-                        <Card key={i} place={place} />
+                        <Card key={i} place={place} user={this.state.user} />
                     ) }
                 
                 {(this.state.places.length == 0) &&
