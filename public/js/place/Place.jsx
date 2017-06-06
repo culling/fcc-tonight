@@ -17,26 +17,41 @@ class PlaceContainer extends React.Component{
     componentWillMount(){
 
         //Place
-        var placeName = "Perth"
-        jQuery.ajax({
-            method: 'GET',
-            url:("/api/places/"+ placeName),
-            success: (rawResult)=>{
-                this.setState({detailsState: "details-div-visible"});
+        //var placeName = "Perth"
 
-                var places = [];
-                var resultObject = JSON.parse(rawResult);
-
-                for(var i = 0; i< resultObject.length; i++){
-                    places.push(resultObject[i]);
-                }
-
-                this.setState({places: places });
-
+        jQuery.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null){
+            return null;
             }
-        });
+            else{
+            return decodeURI(results[1]) || 0;
+            }
+        }
 
+        var placeName = jQuery.urlParam('location') || "";
+        this.setState({searchPlace:placeName});
 
+        if (placeName){
+            jQuery.ajax({
+                method: 'GET',
+                url:("/api/places/"+ placeName),
+                success: (rawResult)=>{
+                    this.setState({detailsState: "details-div-visible"});
+
+                    var places = [];
+                    var resultObject = JSON.parse(rawResult);
+
+                    for(var i = 0; i< resultObject.length; i++){
+                        places.push(resultObject[i]);
+                    }
+
+                    this.setState({places: places });
+
+                }
+            });
+
+        }
 
 
         //User
@@ -59,14 +74,18 @@ class PlaceContainer extends React.Component{
                         this.state.places.map( (place, i) => 
                         <Card key={i} place={place} user={this.state.user} />
                     ) }
+
+
                 
                 {(this.state.places.length == 0) &&
-                    <div>
-                        No Places Found!
-                    </div>
+                <div>
+                    {(this.state.searchPlace != "") &&
+                        <div>
+                            Searching
+                        </div>
+                    }
+                </div>
                 }
-                
-
             </div>
         )
     };
