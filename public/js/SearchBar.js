@@ -8,7 +8,8 @@ class SearchBar extends React.Component{
     constructor(){
         super();
         this.state={
-            user: undefined
+            user: undefined,
+            searchLocation: "My Search Place"
         }
     }
 
@@ -18,7 +19,9 @@ class SearchBar extends React.Component{
             method: 'GET',
             url:"/api/user",
             success: (user)=>{
-                this.setState({ user: user })
+                console.log(user);
+                this.setState({ searchLocation: (user.defaultLocation || "My Search Place" )});
+                this.setState({ user: user });
             }
         });
     }
@@ -30,21 +33,16 @@ class SearchBar extends React.Component{
 
     render(){
         let searchbar = null;
-        if (this.state.lastSearch){
+        if (this.state.searchLocation){
             searchbar =
             <div>
-                <input placeholder={"My Search Place"} id="search_place" type="text" ref={(input)=> this.searchBar = input} ></input>
-                <span className="input-group-btn">
-                    <button className="btn btn-block btn-primary" onClick={ this._searchLocation.bind(this)}>Search</button>
-                </span>
+                <input className="col s9" defaultValue={this.state.searchLocation} placeholder={this.state.searchLocation} name="location" type="text" ></input>
 
             </div>
         }else{
             searchbar = 
             <div>
-
                 <input className="col s9" placeholder={"My Search Place"} name="location" type="text" ></input>
-
             </div>
         }
 

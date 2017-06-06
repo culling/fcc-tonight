@@ -99,3 +99,36 @@ exports.create = function(document, res){
     })
 }
 
+exports.set = function set(user, res){
+    console.log(user);
+
+    if(user._id != true ){
+        res( new Error("not a user"));
+    }
+    findByUsername(user.username, function(err, userFound){
+        if(userFound){
+            console.log("user exists");
+
+            var db = mongo.connect(mongoUrl);
+            mongo.connect(mongoUrl, function(err, db){
+                if(err){console.error(err)};
+                var collection = db.collection( collectionName );
+                collection.update({"user._id": user._id}, 
+                {$set:{"defaultLocation": user.defaultLocation} },
+                {upsert: true}
+                , function(err, updatedDoc){
+                    //if(err){console.error(err)}
+                    if(updatedDoc){
+                        //console.log(updatedDoc.result)
+                        db.close();
+                    }else{
+                        "no updatedDoc"
+                        db.close();
+                    }
+                }
+            );
+        });
+    }
+})
+}
+

@@ -15,7 +15,19 @@ var users       = require("./../controllers/user.controller.server");
 
 
 router.get("/", function(req, res){
+    //req.query.location 
     res.render("index", {"title": config.pageTitle, "user": req.user } );
+
+    var user = req.user;
+    if(user){
+        user.type = "user";
+        delete user.password;
+        user.defaultLocation = req.query.location;
+        mongoExport.users.set(user, function(res){
+            //console.log(res);
+        });
+    }
+    
 });
 
 

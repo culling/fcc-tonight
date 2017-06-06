@@ -68,31 +68,25 @@ exports.set = function set(guestList, res){
             console.log("place already exists");
         }
     })
-        //}else{
-            var db = mongo.connect(mongoUrl);
-            mongo.connect(mongoUrl, function(err, db){
-                if(err){console.error(err)};
-                var collection = db.collection( collectionName );
-                collection.update({"guestList.place_id": guestList.place_id}, 
-                {$set:{"guestList": guestList} },
-                {upsert: true}
-                , function(err, updatedDoc){
-                    //if(err){console.error(err)}
-                    if(updatedDoc){
-                        //console.log(updatedDoc.result)
-                        db.close();
-                    }else{
-                        "no updatedDoc"
-                        db.close();
-                    }
 
-                    //}
-                    //);
-                }
-            );
-            });
-        //}
-    //)
-/*
-*/
+    var db = mongo.connect(mongoUrl);
+    mongo.connect(mongoUrl, function(err, db){
+        if(err){console.error(err)};
+        var collection = db.collection( collectionName );
+        collection.update({"guestList.place_id": guestList.place_id}, 
+        {$set:{"guestList": guestList} },
+        {upsert: true}
+        , function(err, updatedDoc){
+            //if(err){console.error(err)}
+            if(updatedDoc){
+                //console.log(updatedDoc.result)
+                db.close();
+            }else{
+                "no updatedDoc"
+                db.close();
+            }
+        }
+    );
+});
+
 }

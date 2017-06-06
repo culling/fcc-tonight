@@ -16,7 +16,7 @@ var users       = require("./../controllers/user.controller.server");
 var places      = require("./../controllers/places.controller.server");
 
 
-//Happy Helpful functions
+/*//Happy Helpful functions
 function listAllProperties(o) {
     var objectToInspect;     
     var result = [];
@@ -25,6 +25,7 @@ function listAllProperties(o) {
     }
     return result; 
 }
+*/
 
 
 
@@ -220,13 +221,34 @@ router.put("/message", function(req, res){
     //User
     router.get("/user", function(req, res){
         var user = req.user;
-        if(! user){
+        if(user){
+        user.type = "user";
+        delete user.password;
+        }else{
             user = {
-                username: req.ip
+                username: req.ip,
+                type:   "ip"
             }
         }
         res.send(user);
-    })
+    });
+
+    router.put("/user", function(req, res){
+        /*
+        var user = req.user;
+        if(user){
+            user.type = "user";
+            delete user.password;
+            user.defaultLocation = req.body.defaultLocation;
+
+            mongoExport.users.set(user, function(res){
+                //console.log(res);
+            });
+
+
+        } 
+        */       
+    });
 
 
 
