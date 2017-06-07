@@ -36,7 +36,7 @@ class SearchBar extends React.Component{
             method: 'GET',
             url:"/api/user",
             success: (user)=>{
-                this.setState({ searchLocation: (user.defaultLocation || placeName || this.defaultSearchLocation )});
+                this.setState({ searchLocation: ( placeName || user.defaultLocation || this.defaultSearchLocation )});
                 //}
                 this.setState({ user: user });
 
