@@ -56,8 +56,7 @@ var findByUsername = function(username, res){
         //collection.find({}).toArray(function (err, results){
             if(err){console.error(err)};
             if (result){
-                //console.log(result);
-                //console.log("found user")
+
                 db.close();
                 return res(null, result );
             }else{
@@ -100,26 +99,42 @@ exports.create = function(document, res){
 }
 
 exports.set = function set(user, res){
-    console.log(user);
-
-    if(user._id != true ){
-        res( new Error("not a user"));
+    var defaultLocation = user.defaultLocation;
+    //console.log("user");
+    //console.log(user);
+    if(user.hasOwnProperty("_id") != true ){
+        res( ("not a user"));
+        return;
     }
+    if(user.defaultLocation == "My Search Location"){
+        res( ("empty string found"));
+        return;
+    }
+
+    if(user.defaultLocation == undefined){
+        res( ("empty string found"));
+        return;
+    }
+
+    delete user._id;
+
+
     findByUsername(user.username, function(err, userFound){
         if(userFound){
             console.log("user exists");
+
 
             var db = mongo.connect(mongoUrl);
             mongo.connect(mongoUrl, function(err, db){
                 if(err){console.error(err)};
                 var collection = db.collection( collectionName );
-                collection.update({"user._id": user._id}, 
-                {$set:{"defaultLocation": user.defaultLocation} },
-                {upsert: true}
+                collection.update({"username": user.username}, 
+                {$set:{"defaultLocation": user.defaultLocation}},
+                {upsert: false}
                 , function(err, updatedDoc){
-                    //if(err){console.error(err)}
+                    if(err){console.error(err)}
                     if(updatedDoc){
-                        //console.log(updatedDoc.result)
+                        console.log(updatedDoc.result )
                         db.close();
                     }else{
                         "no updatedDoc"

@@ -21,10 +21,10 @@ router.get("/", function(req, res){
     var user = req.user;
     if(user){
         user.type = "user";
-        delete user.password;
+//        delete user.password;
         user.defaultLocation = req.query.location;
         mongoExport.users.set(user, function(res){
-            //console.log(res);
+            console.log(res);
         });
     }
     

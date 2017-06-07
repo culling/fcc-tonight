@@ -3,25 +3,45 @@ $('document').ready(function() {
 });
 
 
-
 class SearchBar extends React.Component{
     constructor(){
         super();
         this.state={
             user: undefined,
-            searchLocation: "My Search Place"
+            searchLocation: "My Search Location"
         }
     }
 
     componentWillMount(){
+        jQuery.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null){
+            return null;
+            }
+            else{
+            return decodeURI(results[1]) || 0;
+            }
+        }
+        var placeName = jQuery.urlParam('location') || "";
+        console.log(placeName == "");
+
+
         //User
         jQuery.ajax({
             method: 'GET',
             url:"/api/user",
             success: (user)=>{
-                console.log(user);
-                this.setState({ searchLocation: (user.defaultLocation || "My Search Place" )});
+                //console.log(user);
+                //if (placeName != ""){
+                //    user.defaultLocation = placeName;
+                //    this.setState({ searchLocation: (user.defaultLocation  )});
+                //}
+                //if (user.defaultLocation != ""){
+                this.setState({ searchLocation: (user.defaultLocation || "My Search Location" )});
+                //}
                 this.setState({ user: user });
+
+                console.log(this.state);
             }
         });
     }
@@ -32,24 +52,22 @@ class SearchBar extends React.Component{
     }
 
     render(){
-        let searchbar = null;
-        if (this.state.searchLocation){
-            searchbar =
-            <div>
-                <input className="col s9" defaultValue={this.state.searchLocation} placeholder={this.state.searchLocation} name="location" type="text" ></input>
+        //if (this.state.user){
+        //    var searchBar = <input className="col s9" placeholder={this.state.searchLocation} defaultValue={this.state.searchLocation || ""} name="location" type="text" ></input>
+        //}
+        //else{
 
-            </div>
-        }else{
-            searchbar = 
-            <div>
-                <input className="col s9" placeholder={"My Search Place"} name="location" type="text" ></input>
-            </div>
-        }
+        
+
+        var searchBar = <input ref={(input)=> this.location = input} id="location" 
+            className="col s9" placeholder={this.state.searchLocation} 
+            defaultValue={""} name="location" type="text" ></input>            
+        //}
 
         return (
         <div className="row">
-            <form className="col s12" action="/" method="get">
-                {searchbar}
+            <form id="search" className="col s12" action="/" method="get">
+                {searchBar}
                 <span className="input-group-btn col s3">
                     <button type="submit" className="btn btn-block btn-primary" > <i className="material-icons">search</i>  </button>
                 </span>
