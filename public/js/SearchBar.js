@@ -26,10 +26,9 @@ class SearchBar extends React.Component{
             return decodeURI(results[1]) || 0;
             }
         }
-        var placeName = jQuery.urlParam('location') || "";
-        console.log(placeName == "");
-
-
+        var placeName = jQuery.urlParam('location') //|| this.defaultSearchLocation;
+        //console.log(placeName);
+        //this.setState({searchLocation: placeName});
 
 
         //User
@@ -37,13 +36,7 @@ class SearchBar extends React.Component{
             method: 'GET',
             url:"/api/user",
             success: (user)=>{
-                //console.log(user);
-                //if (placeName != ""){
-                //    user.defaultLocation = placeName;
-                //    this.setState({ searchLocation: (user.defaultLocation  )});
-                //}
-                //if (user.defaultLocation != ""){
-                this.setState({ searchLocation: (user.defaultLocation || "My Search Location" )});
+                this.setState({ searchLocation: (user.defaultLocation || placeName || this.defaultSearchLocation )});
                 //}
                 this.setState({ user: user });
 
