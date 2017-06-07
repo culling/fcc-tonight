@@ -1,6 +1,8 @@
 $('document').ready(function() {
     console.log("javascript Loaded");
+
 });
+
 
 
 class SearchBar extends React.Component{
@@ -9,7 +11,9 @@ class SearchBar extends React.Component{
         this.state={
             user: undefined,
             searchLocation: "My Search Location"
+            
         }
+        this.defaultSearchLocation = "My Search Location";
     }
 
     componentWillMount(){
@@ -24,6 +28,8 @@ class SearchBar extends React.Component{
         }
         var placeName = jQuery.urlParam('location') || "";
         console.log(placeName == "");
+
+
 
 
         //User
@@ -46,9 +52,16 @@ class SearchBar extends React.Component{
         });
     }
 
-    _searchLocation(){
-        //window.location = this.searchBar.value
-        console.log(this.searchBar.value);
+    _formSubmit(event){
+        //Set the value before submission unless it is the default text;
+        var location = jQuery("#location").val();
+        if (location == ""){
+            if (this.state.searchLocation != this.defaultSearchLocation){
+                jQuery("#location").val(this.state.searchLocation);
+            }else{
+                event.preventDefault();
+            }
+        }
     }
 
     render(){
@@ -66,10 +79,10 @@ class SearchBar extends React.Component{
 
         return (
         <div className="row">
-            <form id="search" className="col s12" action="/" method="get">
+            <form id="search" className="col s12" action="/" method="get" onSubmit={this._formSubmit.bind(this) }  >
                 {searchBar}
                 <span className="input-group-btn col s3">
-                    <button type="submit" className="btn btn-block btn-primary" > <i className="material-icons">search</i>  </button>
+                    <button type="submit" className="btn btn-block btn-primary"  > <i className="material-icons">search</i>  </button>
                 </span>
             </form>
         </div>
