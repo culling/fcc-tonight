@@ -2,6 +2,18 @@
 
 console.log("Card Loaded");
 
+function pad(number) {
+    if (number < 10) {
+        return '0' + number;
+    }
+    return number;
+}
+
+Date.prototype.shortDate = function() {
+return this.getUTCFullYear() +
+    '-' + pad(this.getUTCMonth() + 1) +
+    '-' + pad(this.getUTCDate())
+};
 
 
 
@@ -45,7 +57,7 @@ class Card extends React.Component{
     networkSetState(newStateDiff) {
         // do some awesome network things here
         // 1. put the entire state into the database
-        this.saveStateToDB();
+        this.saveStateToDB(newStateDiff);
         // 2. put diffs onto the websocket
         this.postToSocket(newStateDiff);
         // 3. set state as per usual
@@ -56,31 +68,13 @@ class Card extends React.Component{
         socket.emit('new state', newStateDiff);
     }
 
-    saveStateToDB() {
-
-            function pad(number) {
-                if (number < 10) {
-                    return '0' + number;
-                }
-                return number;
-            }
-
-            Date.prototype.shortDate = function() {
-            return this.getUTCFullYear() +
-                '-' + pad(this.getUTCMonth() + 1) +
-                '-' + pad(this.getUTCDate())
-            };
-
-            var date   = new Date();
-
-
+    saveStateToDB(guestList) {
+        //console.log(guestList);
+        var date   = new Date();
 
         var place = Object.assign(this.state.place);
-        place.guests = this.state.guests.map((guest) => {return guest});
-        place.guests.push({username: this.props.user.username, date: date.shortDate()}); //this.state[`${this.props.place.place_id}`];
+        place.guests = guestList.guests;
         //console.log(place);
-        
-        //console.log(this.state.guests);
 
         jQuery.ajax({ url: '/api/guestList', 
             contentType: 'application/json', // for request
@@ -98,34 +92,40 @@ class Card extends React.Component{
 
 
 
-  _countClicker(e) {
-
-
-            function pad(number) {
-                if (number < 10) {
-                    return '0' + number;
-                }
-                return number;
-            }
-
-            Date.prototype.shortDate = function() {
-            return this.getUTCFullYear() +
-                '-' + pad(this.getUTCMonth() + 1) +
-                '-' + pad(this.getUTCDate())
-            };
-
-
+  _addToGuestList(e) {
+    var username = this.props.user.username;
     var guests = this.state.guests.map((guest) => {return guest});
+
     var date   = new Date();
+    var newGuest = {username: username, date: date.shortDate() };
 
+    var guestFound = guests.filter((existingGuest)=>{
+        return existingGuest.username == newGuest.username;
+    });
 
-
-    guests.push({username: this.props.user.username, date: date.shortDate() }); //this.state[`${this.props.place.place_id}`];
-    console.log(guests);
-    this.networkSetState({guests:guests});
+//    console.log(guestFound);
+    if(guestFound.length == 0){
+        guests.push(newGuest); //this.state[`${this.props.place.place_id}`];
+//        console.log(guests);
+        this.networkSetState({guests:guests});
+    }
 
   }
   
+  _removeFromGuestList(event){
+    var username = this.props.user.username;
+    var guests = this.state.guests.map((guest) => {return guest});
+
+    var filteredGuests = guests.filter((existingGuest)=>{
+        return existingGuest.username != username;
+    });
+
+    console.log(filteredGuests);
+    this.networkSetState({guests:filteredGuests});
+
+  }
+
+
 
     render(){
         return(
@@ -134,8 +134,7 @@ class Card extends React.Component{
                 <div className="card blue-grey darken-1">
                     <div className="card-content white-text">
                         <span className="card-title">{this.props.place.name}</span>
-                        <div>Clicks: {this.state.count}</div>
-                        {/*<div>Clicks for this Place: {this.state[`${this.props.place.place_id}`] }</div>*/}
+
                         { this.state.guests &&
                             <div>Guests for this Place: {this.state.guests.length}
                                 <p> Current Guest List</p>
@@ -149,10 +148,12 @@ class Card extends React.Component{
                             </div>
                             
                         }
+                        {(this.props.user.type == "user") &&
                         <div className="card-action">
-                            <a href="#" onClick={()=> this._countClicker() }>Count Clicker</a>
-                            <a href="#">This is a link</a>
+                            <a href="#" onClick={()=> this._addToGuestList() }>Going Tonight</a>
+                            <a href="#" onClick={()=> this._removeFromGuestList()}>Not Going Tonight</a>
                         </div>
+                        }
                     </div>
                 </div>
             </div>

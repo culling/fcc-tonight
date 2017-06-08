@@ -75,6 +75,7 @@ router.get("/guestList/:id", function(req, res){
             res.write(err);
         }
 
+
         if (rawResults){
             var results = rawResults;
             results.guestList.guests = rawResults.guestList.guests.filter((guest) => {
@@ -85,8 +86,9 @@ router.get("/guestList/:id", function(req, res){
             results = rawResults;
         }
         
-        //console.log(results);
+
         res.write(JSON.stringify(results));
+
         res.end();
         //res.send(results[1]);
     });
