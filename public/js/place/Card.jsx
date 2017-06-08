@@ -49,6 +49,7 @@ class Card extends React.Component{
         });
 
         socket.on('new state', function(newState) {
+            console.log(newState);
             this.setState(newState);
         }.bind(this));
     }
