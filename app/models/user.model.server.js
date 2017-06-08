@@ -15,7 +15,7 @@ var records = [
 */
 
 exports.findById = function(id, res){
-    console.log("Find by Id called");
+    //console.log("Find by Id called");
     var query = { _id : id };
     var db = mongo.connect(mongoUrl);
     mongo.connect(mongoUrl, function(err, db){
@@ -26,12 +26,12 @@ exports.findById = function(id, res){
         //collection.find({}).toArray(function (err, results){
             if(err){console.error(err)};
             if (result){
-                console.log(result);
-                console.log("found user")
+                //console.log(result);
+                //console.log("found user")
                 db.close();
                 res(null, JSON.stringify(result) );
             }else{
-                console.log("didnt find user")
+                //console.log("didnt find user")
                 db.close();
                 //return res(null, null);
                 res(new Error('User ' + id + ' does not exist'));
@@ -46,7 +46,7 @@ exports.findById = function(id, res){
 
 
 var findByUsername = function(username, res){
-    console.log("Find by Username called");
+    //console.log("Find by Username called");
     var query = {username : username };
     var db = mongo.connect(mongoUrl);
     mongo.connect(mongoUrl, function(err, db){
@@ -60,7 +60,7 @@ var findByUsername = function(username, res){
                 db.close();
                 return res(null, result );
             }else{
-                console.log("didnt find user")
+                //console.log("didnt find user")
                 db.close();
                 return res(null, null );
             }
@@ -121,7 +121,7 @@ exports.set = function set(user, res){
 
     findByUsername(user.username, function(err, userFound){
         if(userFound){
-            console.log("user exists");
+            //console.log("user exists");
 
 
             var db = mongo.connect(mongoUrl);
@@ -134,7 +134,7 @@ exports.set = function set(user, res){
                 , function(err, updatedDoc){
                     if(err){console.error(err)}
                     if(updatedDoc){
-                        console.log(updatedDoc.result )
+                        //console.log(updatedDoc.result )
                         db.close();
                     }else{
                         "no updatedDoc"
