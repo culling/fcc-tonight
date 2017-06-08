@@ -59,7 +59,7 @@ var findByPlaceId = function(place_id, res){
                 db.close();
                 return res(null, result );
             }else{
-                console.log("didnt find place")
+                //console.log("didnt find place")
                 db.close();
                 return res(null, null );
             }

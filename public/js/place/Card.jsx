@@ -20,33 +20,21 @@ class Card extends React.Component{
     }
 
     componentWillMount(){
-        //console.log("Card Mounted");
-        //console.log(this.props.place);
-        //function getGuestList(place_id){
-            jQuery.ajax({
-                method: 'GET',
-                url:("/api/guestList/"+ this.props.place.place_id),
-                contentType: 'application/json', // for request
-                //dataType: 'json',
-                success: (results)=>{
-                    //if(results[0].length != undefined){
-                    let guestList = JSON.parse(results) ;
-                    if (guestList != null){
-                        /*
-                        console.log("results: " + results);
-                        console.log("guestList: ")
-                        console.log(guestList.guestList);
-                        console.log("guests: ")
-                        console.log(guestList.guestList.guests);
-                        */
-                        this.setState({guests: (guestList.guestList.guests || [] )});
-                        
-                    }
+        jQuery.ajax({
+            method: 'GET',
+            url:("/api/guestList/"+ this.props.place.place_id),
+            contentType: 'application/json', // for request
+            //dataType: 'json',
+            success: (results)=>{
+
+                let guestList = JSON.parse(results) ;
+                if (guestList != null){
+
+                    this.setState({guests: (guestList.guestList.guests || [] )});
+                    //console.log(this.state.guests);
                 }
-            });
-        //}
-
-
+            }
+        });
 
         socket.on('new state', function(newState) {
             this.setState(newState);
@@ -69,11 +57,28 @@ class Card extends React.Component{
     }
 
     saveStateToDB() {
-        
+
+            function pad(number) {
+                if (number < 10) {
+                    return '0' + number;
+                }
+                return number;
+            }
+
+            Date.prototype.shortDate = function() {
+            return this.getUTCFullYear() +
+                '-' + pad(this.getUTCMonth() + 1) +
+                '-' + pad(this.getUTCDate())
+            };
+
+            var date   = new Date();
+
+
+
         var place = Object.assign(this.state.place);
         place.guests = this.state.guests.map((guest) => {return guest});
-        place.guests.push(this.props.user.username); //this.state[`${this.props.place.place_id}`];
-        console.log(place);
+        place.guests.push({username: this.props.user.username, date: date.shortDate()}); //this.state[`${this.props.place.place_id}`];
+        //console.log(place);
         
         //console.log(this.state.guests);
 
@@ -94,17 +99,31 @@ class Card extends React.Component{
 
 
   _countClicker(e) {
-    //let placeId = this.props.place.place_id;
-    //this.networkSetState({ [`${this.props.place.place_id}`]: (this.state[`${this.props.place.place_id}`]+ 1 ) });
 
-    //var place = Object.assign(this.state.place);
-        var guests = this.state.guests.map((guest) => {return guest});
-        guests.push(this.props.user.username); //this.state[`${this.props.place.place_id}`];
-        console.log(guests);
+
+            function pad(number) {
+                if (number < 10) {
+                    return '0' + number;
+                }
+                return number;
+            }
+
+            Date.prototype.shortDate = function() {
+            return this.getUTCFullYear() +
+                '-' + pad(this.getUTCMonth() + 1) +
+                '-' + pad(this.getUTCDate())
+            };
+
+
+    var guests = this.state.guests.map((guest) => {return guest});
+    var date   = new Date();
+
+
+
+    guests.push({username: this.props.user.username, date: date.shortDate() }); //this.state[`${this.props.place.place_id}`];
+    console.log(guests);
     this.networkSetState({guests:guests});
-    //this.networkSetState({ count:   (this.state.count  + 1) });
-    //console.log(this.state.count);
-    //console.log(this.state);
+
   }
   
 
@@ -124,7 +143,7 @@ class Card extends React.Component{
                                 <ul className="collection">
                                     {this.state.guests.map((guest, i) => {
                                         return <li key={i} className="collection-item avatar" style={{color: "black"}}>
-                                            <i className="material-icons circle red" style={{ fontSize:"2em" }} >{(guest[0]).toUpperCase() }</i><p>{guest}</p>
+                                            <i className="material-icons circle red" style={{ fontSize:"2em" }} >{ String(guest.username).toString().toUpperCase() }</i><p>{guest.username} - {guest.date } </p>
                                             </li>})}
                                 </ul>
                             </div>
