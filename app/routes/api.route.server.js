@@ -54,7 +54,6 @@ router.put("/guestList", function(req, res){
     mongoExport.guestList.set(guestList, function(res){
         //console.log(res);
     });
-
 });
 
 router.get("/guestList/:id", function(req, res){

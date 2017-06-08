@@ -27,16 +27,19 @@ class SearchBar extends React.Component{
             }
         }
         var placeName = jQuery.urlParam('location') //|| this.defaultSearchLocation;
-        //console.log(placeName);
-        //this.setState({searchLocation: placeName});
-
+        if (placeName){
+            placeName = placeName.replace("+", " ");
+        }
 
         //User
         jQuery.ajax({
             method: 'GET',
             url:"/api/user",
             success: (user)=>{
-                this.setState({ searchLocation: ( placeName || user.defaultLocation || this.defaultSearchLocation )});
+                if (user.defaultLocation){
+                    user.defaultLocation = user.defaultLocation.replace("+", " ");
+                }
+                this.setState({ searchLocation: ( placeName || user.defaultLocation || this.defaultSearchLocation.replace("+", " ") )});
                 //}
                 this.setState({ user: user });
 
