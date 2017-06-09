@@ -65,12 +65,14 @@ router.get('/profile',
     res.render('profile', { user: req.user });
   });
 
+
  router.get('/signup',
   function(req, res){
-    res.render('signup', {
-        title:      "Sign Up",
-        messages:   req.flash('error') || req.flash('info')
+    res.render('signup',{     
+        messages:   req.flash('error') || req.flash('info'),
+        title: config.pageTitle  
     } );
+
   }); 
   
 router.post("/signup",

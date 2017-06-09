@@ -45,7 +45,7 @@ router.get("/places/:id", function(req, res){
 
 
 router.put("/guestList", function(req, res){
-    console.log(req.body);
+    //console.log(req.body);
     var guestList = {
         place_id:   req.body.place_id,
         guests:     req.body.guests
