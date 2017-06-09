@@ -18,8 +18,6 @@ class GuestList {
         this.place_id   = place_id;
         this.guests     = [guests] || [];
     }
-
-
 }
 
 
