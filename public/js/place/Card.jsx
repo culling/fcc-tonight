@@ -20,7 +20,7 @@ return this.getUTCFullYear() +
 class Card extends React.Component{
     constructor(props){
         super(props);
-        //var [placeId] = this.props.place.place_id;
+
         this.state={
             count: 0,
             detailsState: "details-div-hidden",
@@ -28,28 +28,29 @@ class Card extends React.Component{
             place: this.props.place, 
             guests:[]
         }
-        //console.log(this.state);
+
     }
 
     componentWillMount(){
+        //console.log(this.props.place);
         jQuery.ajax({
             method: 'GET',
             url:("/api/guestList/"+ this.props.place.place_id),
             contentType: 'application/json', // for request
-            //dataType: 'json',
+
             success: (results)=>{
 
                 let guestList = JSON.parse(results) ;
                 if (guestList != null){
 
                     this.setState({guests: (guestList.guestList.guests || [] )});
-                    //console.log(this.state.guests);
+
                 }
             }
         });
 
         socket.on('new state', function(newState) {
-            //console.log(newState);
+
             
             if (newState.place_id == this.state.place.place_id){
                 this.setState(newState);
@@ -73,7 +74,7 @@ class Card extends React.Component{
     }
 
     saveStateToDB(newStateDiff) {
-        //console.log(place);
+
         jQuery.ajax({ url: '/api/guestList', 
             contentType: 'application/json', // for request
             dataType: 'json', //for response
@@ -117,7 +118,10 @@ class Card extends React.Component{
     this.networkSetState(place);
   }
 
-
+  _setDetailsState(){
+      var newDetailsState = ((this.state.detailsState=="details-div-hidden")?  "details-div-visible" : "details-div-hidden");
+      this.setState({detailsState: newDetailsState}); 
+  }
 
     render(){
         return(
@@ -128,12 +132,13 @@ class Card extends React.Component{
                         <span className="card-title">{this.props.place.name}</span>
 
                         { this.state.guests &&
-                            <div>Guests for this Place: {this.state.guests.length}
-                                <p> Current Guest List</p>
+                            <div>{this.props.place.vicinity }
+                                <br />
+                                <button onClick={this._setDetailsState.bind(this)} className="btn"> Current Guest List ({this.state.guests.length}) </button>
                                 
                                 <ul className="collection">
                                     {this.state.guests.map((guest, i) => {
-                                        return <li key={i} className="collection-item avatar" style={{color: "black"}}>
+                                        return <li key={i} className={"collection-item avatar " + this.state.detailsState} style={{color: "black"}}>
                                             <i className="material-icons circle red" style={{ fontSize:"2em" }} >{ String(guest.username).toString()[0].toUpperCase() }</i><p>{guest.username}</p>
                                             </li>})}
                                 </ul>

@@ -15,19 +15,24 @@ var users       = require("./../controllers/user.controller.server");
 
 
 router.get("/", function(req, res){
-    //req.query.location 
+
     var user = req.user;
     if(user){
         user.type = "user";
-//        delete user.password;
+
         if(req.query.location){
             user.defaultLocation = req.query.location;
             mongoExport.users.set(user, function(res){
                 console.log(res);
             });
+        }else if(user.defaultLocation != undefined ){
+            console.log(user.defaultLocation);
+            res.redirect("/?location=" + user.defaultLocation);
+            //res.query.location = user.defaultLocation;
         }
     }
     
+
     res.render("index", {"title": config.pageTitle, "user": user } );
 
 
