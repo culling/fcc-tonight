@@ -49,8 +49,11 @@ class Card extends React.Component{
         });
 
         socket.on('new state', function(newState) {
-            console.log(newState);
-            this.setState(newState);
+            //console.log(newState);
+            
+            if (newState.place_id == this.state.place.place_id){
+                this.setState(newState);
+            }
         }.bind(this));
     }
 
@@ -69,25 +72,15 @@ class Card extends React.Component{
         socket.emit('new state', newStateDiff);
     }
 
-    saveStateToDB(guestList) {
-        //console.log(guestList);
-        var date   = new Date();
-
-        var place = Object.assign(this.state.place);
-        place.guests = guestList.guests;
+    saveStateToDB(newStateDiff) {
         //console.log(place);
-
         jQuery.ajax({ url: '/api/guestList', 
             contentType: 'application/json', // for request
             dataType: 'json', //for response
             type: 'PUT',
-            data: JSON.stringify(place) 
+            data: JSON.stringify(newStateDiff) 
         });
-
     }
-
-
-
     //End NETWORK Sync
 
 
@@ -96,7 +89,6 @@ class Card extends React.Component{
   _addToGuestList(e) {
     var username = this.props.user.username;
     var guests = this.state.guests.map((guest) => {return guest});
-
     var date   = new Date();
     var newGuest = {username: username, date: date.shortDate() };
 
@@ -104,13 +96,12 @@ class Card extends React.Component{
         return existingGuest.username == newGuest.username;
     });
 
-//    console.log(guestFound);
     if(guestFound.length == 0){
         guests.push(newGuest); //this.state[`${this.props.place.place_id}`];
-//        console.log(guests);
-        this.networkSetState({guests:guests});
+        var place = Object.assign(this.state.place);
+        place.guests = guests;
+        this.networkSetState(place);
     }
-
   }
   
   _removeFromGuestList(event){
@@ -120,10 +111,10 @@ class Card extends React.Component{
     var filteredGuests = guests.filter((existingGuest)=>{
         return existingGuest.username != username;
     });
+    var place = Object.assign(this.state.place);
+    place.guests = filteredGuests;
 
-    console.log(filteredGuests);
-    this.networkSetState({guests:filteredGuests});
-
+    this.networkSetState(place);
   }
 
 
@@ -143,7 +134,7 @@ class Card extends React.Component{
                                 <ul className="collection">
                                     {this.state.guests.map((guest, i) => {
                                         return <li key={i} className="collection-item avatar" style={{color: "black"}}>
-                                            <i className="material-icons circle red" style={{ fontSize:"2em" }} >{ String(guest.username).toString().toUpperCase() }</i><p>{guest.username} - {guest.date } </p>
+                                            <i className="material-icons circle red" style={{ fontSize:"2em" }} >{ String(guest.username).toString()[0].toUpperCase() }</i><p>{guest.username}</p>
                                             </li>})}
                                 </ul>
                             </div>
